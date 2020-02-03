@@ -1,0 +1,29 @@
+<app-header></app-header>
+<br>
+<div class="grid col-5 ">
+  <p class="grid-header">List Bank Account</p>
+  <div class="item-wrapper">
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Bank</th>
+            <th>Account Name</th>
+            <th>Account No</th>
+            <th>Currency</th>
+            <th>Last Balance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let bank of banks">
+            <td>{{bank.bankName}}</td>
+            <td>{{bank.accountName}}</td>
+            <td>{{bank.accountNo}}</td>
+            <td>{{bank.currency}}</td>
+            <td>{{bank.lastBalance}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
