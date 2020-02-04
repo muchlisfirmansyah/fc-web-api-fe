@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpHeaders } from '@angular/common/http';
-import { AuthenticationService } from 'src/service/auth/auth.service';
 import { Observable } from 'rxjs';
+import { AuthenticationService } from 'src/service/auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ export class AuthHttpInterceptorService implements HttpInterceptor {
           const authReq = req.clone({
               headers: new HttpHeaders({
                   'Content-Type': 'application/json',
-                  'Authorization': `Basic ${window.btoa(this.authenticationService.username + ':' + this.authenticationService.password)}`
+                  'Authorization': `Bearer ${window.btoa(this.authenticationService.username + ':' + this.authenticationService.password)}`
               })
           });
           return next.handle(authReq);
