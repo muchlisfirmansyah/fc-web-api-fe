@@ -1,25 +1,55 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
+
+
+export class JwtResponse {
+  constructor(
+    public jwttoken: string,
+     ) {}
+}
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class AuthenticationService {
 
-  // BASE_PATH: 'http://localhost:8080'
+  BASE_PATH = 'http://localhost:8080';
   USER_NAME_SESSION_ATTRIBUTE_NAME = 'authenticatedUser';
 
   public username: string;
   public password: string;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient) {}
 
+  httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json'
+    })
+  };
+
+  authenticate(username, password) {
+    return this.http.post<any>(this.BASE_PATH + '/authenticate', {username, password}, this.httpOptions).pipe(
+     map(
+       userData => {
+        sessionStorage.setItem(this.USER_NAME_SESSION_ATTRIBUTE_NAME, username);
+        const tokenStr = 'Bearer ' + userData.jwtToken;
+        sessionStorage.setItem('token', tokenStr);
+        this.username = username;
+        this.password = password;
+        this.registerSuccessfulLogin(username, password);
+       }
+     )
+    );
   }
 
   authenticationService(username: string, password: string) {
-    return this.http.get(`http://localhost:8080/api/v1/auth`,
-      { headers: { authorization: this.createBasicAuthToken(username, password) } }).pipe(map((res) => {
+    return this.http.get(this.BASE_PATH + `/api/v1/auth`, {
+      headers: {
+        Authorization: 'Bearer ' + this.createBasicAuthToken(username, password)
+      }
+    }).pipe(map((res) => {
         this.username = username;
         this.password = password;
         this.registerSuccessfulLogin(username, password);
@@ -27,7 +57,7 @@ export class AuthenticationService {
   }
 
   createBasicAuthToken(username: string, password: string) {
-    return 'Basic ' + window.btoa(username + ':' + password);
+    return 'Bearer ' + window.btoa(username + ':' + password);
   }
 
   registerSuccessfulLogin(username, password) {

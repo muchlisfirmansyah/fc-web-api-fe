@@ -4,6 +4,7 @@ import { LoginComponent } from './module/login/login.component';
 import { BankAccountListComponent } from './module/bank-account-list/bank-account-list.component';
 import { AuthGuardService } from 'src/service/auth/auth-guard.service';
 
+
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: '', component: LoginComponent},
