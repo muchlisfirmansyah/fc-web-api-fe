@@ -44,6 +44,20 @@ export class AuthenticationService {
     );
   }
 
+  authenticationService(username: string, password: string) {
+    return this.http.get(this.BASE_PATH + `/api/v1/auth`, {
+      headers: {
+        Authorization: 'Bearer ' + this.createBasicAuthToken(username, password)
+      }
+    }).pipe(map((res) => {
+        this.username = username;
+        this.password = password;
+        this.registerSuccessfulLogin(username, password);
+       }
+     )
+    );
+  }
+
   createBasicAuthToken(username: string, password: string) {
     return 'Bearer ' + window.btoa(username + ':' + password);
   }
